@@ -13,7 +13,8 @@ exports.getStations = async (req, res, next) => {
 const getStationAndTimeData = async () => {
   const stations = [];
   const times = [];
-  return rp(url).then(async (html) => {
+  try {
+    const html = await rp(url);
     $("#startStation", html)
       .find("option")
       .each((i, op) => {
@@ -30,5 +31,7 @@ const getStationAndTimeData = async () => {
       });
 
     return { stations: stations, times: times };
-  });
+  } catch (error) {
+    console.log(error);
+  }
 };
