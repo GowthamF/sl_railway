@@ -15,7 +15,11 @@
     "request": "^2.88.2",
     "request-promise": "^4.2.6"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/GowthamF/sl_railway"
+  },
   "engines": {
-    "node": "10.x"
+    "node": "14.x"
   }
 }
