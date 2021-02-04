@@ -7,7 +7,10 @@ class Schedule {
     endStation,
     frequency,
     name,
-    type
+    type,
+    availableClasses,
+    trainsEnd,
+    trainNo
   ) {
     this.startStation = startStation;
     this.arrivalTime = arrivalTime;
@@ -17,6 +20,9 @@ class Schedule {
     this.frequency = frequency;
     this.name = name;
     this.type = type;
+    this.availableClasses = availableClasses;
+    this.trainsEnd = trainsEnd;
+    this.trainNo = trainNo;
   }
 }
 
