@@ -17,6 +17,8 @@ getScheduleData = async (req) => {
     let scheduleBody = [];
     let trainDetails = [];
     const scheduleAdditionalData = [];
+    const ticketDetails = { totalDistance: {}, ticketPrices: [] };
+
     // const selectedLocale = req.body.selectedLocale;
     // const startStationID = req.body.startStationID;
     // const endStationID = req.body.endStationID;
@@ -63,6 +65,17 @@ getScheduleData = async (req) => {
       .text()
       .trim();
 
+    $(".hero-unit", body)
+      .find("table > tbody > tr")
+      .each((index, tr) => {
+        if ($("td > strong", tr).length > 0) {
+          ticketDetails.totalDistance = $("td", tr).text().trim();
+          return;
+        } else {
+          ticketDetails.ticketPrices.push($("td", tr).text().trim());
+          return;
+        }
+      });
     const tableContent = $(".row .col-md-12 .table-responsive", body).find(
       "table"
     );
@@ -184,7 +197,14 @@ getScheduleData = async (req) => {
 
       return _scheduleData;
     });
-    trainDetails = { headers: scheduleHeaders, schedules: schedule };
+    trainDetails = {
+      headerText: headerText,
+      totalAvailableTrains: totalAvailableTrains,
+      directTrains: directTrains,
+      headers: scheduleHeaders,
+      ticketDetails: ticketDetails,
+      schedules: schedule,
+    };
     return trainDetails;
   } catch (error) {
     console.log(error);
