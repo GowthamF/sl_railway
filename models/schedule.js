@@ -9,7 +9,7 @@ class Schedule {
     name,
     type,
     availableClasses,
-    trainsEnd,
+    trainsEndAt,
     trainNo
   ) {
     this.startStation = startStation;
@@ -21,7 +21,7 @@ class Schedule {
     this.name = name;
     this.type = type;
     this.availableClasses = availableClasses;
-    this.trainsEnd = trainsEnd;
+    this.trainsEndAt = trainsEndAt;
     this.trainNo = trainNo;
   }
 }

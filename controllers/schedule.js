@@ -14,8 +14,9 @@ exports.getSchedule = async (req, res, next) => {
 getScheduleData = async (req) => {
   try {
     const scheduleHeaders = [];
-    const scheduleBody = [];
+    let scheduleBody = [];
     let trainDetails = [];
+    const scheduleAdditionalData = [];
     // const selectedLocale = req.body.selectedLocale;
     // const startStationID = req.body.startStationID;
     // const endStationID = req.body.endStationID;
@@ -45,6 +46,14 @@ getScheduleData = async (req) => {
       .find("legend > span")
       .text()
       .trim();
+    const errorText = $("#es-content", body)
+      .find("legend > strong")
+      .text()
+      .trim();
+    if (errorText === "Error") {
+      const err = new Error("System error occurred.");
+      throw err;
+    }
     const totalAvailableTrains = $(".row .col-md-12", body)
       .find("div > strong")
       .text()
@@ -63,7 +72,50 @@ getScheduleData = async (req) => {
     });
 
     tableContent.find("tbody > tr").each((index, tr) => {
-      if ($(tr).find("td > hr").length > 0) {
+      if ($(tr).find("td > hr").length > 0 || $(tr).attr("style")) {
+        if ($(tr).attr("style")) {
+          const additionalData = $(tr)
+            .text()
+            .trim()
+            .replace(/\s\s+/g, " ")
+            .split(" ");
+
+          const startAIndex = additionalData.findIndex((val) => {
+            return val === "Available";
+          });
+          const endAIndex = additionalData.findIndex((val) => {
+            return val === "Train";
+          });
+          const startTEIndex = additionalData.findIndex((val) => {
+            return val === "Train";
+          });
+          const endTEIndex = additionalData.findIndex((val) => {
+            return val === "No:";
+          });
+
+          const available = additionalData.slice(startAIndex, endAIndex);
+          const trainEnd = additionalData.slice(startTEIndex, endTEIndex - 1);
+
+          const availableClasses = available
+            .join("")
+            .split(":")[1]
+            .replace(/,/g, " | ");
+          const trainsEndData = trainEnd.join("").split("at");
+          const trainsEndAt = trainsEndData[1] + " at " + trainsEndData[2];
+
+          const trainNoData = additionalData.slice(
+            endTEIndex + 1,
+            endTEIndex + 2
+          );
+
+          const trainNo = trainNoData[0];
+          scheduleAdditionalData.push({
+            availableClasses: availableClasses,
+            trainsEndAt: trainsEndAt,
+            trainNo: trainNo,
+          });
+        }
+
         return;
       } else {
         const schedule = new Schedule();
@@ -71,82 +123,68 @@ getScheduleData = async (req) => {
         $(tr)
           .find("td")
           .each((index, td) => {
-            if ($(td).parent("tr").attr("style")) {
-              schedule.availableClasses = $(td).parent("tr").text().trim();
-              const additionalData = $(td)
-                .parent("tr")
-                .text()
-                .trim()
-                .replace(/\s\s+/g, " ")
-                .split(" ");
-
-              const startAIndex = additionalData.findIndex((val) => {
-                return val === "Available";
-              });
-              const endAIndex = additionalData.findIndex((val) => {
-                return val === "Train";
-              });
-              const available = additionalData.slice(startAIndex, endAIndex);
-              const modifyingAvailable = available.toString().split(":");
-              const uppdatedAvailable = modifyingAvailable[1].replace(
-                /,/g,
-                "|"
-              );
-              // schedule.availableClasses = .toString()
-              // .replace(/,/g, " ");
-              console.log(uppdatedAvailable);
-            } else {
-              switch (index) {
-                case 0:
-                  schedule.startStation = $(td).text().trim();
-                  break;
-                case 1:
-                case 2:
-                  if ($("font", td).attr("color") === "green") {
-                    const arrivalTime = $("font", td).text().trim();
-                    if (arrivalTime) {
-                      schedule.arrivalTime = arrivalTime;
-                      break;
-                    }
-                  } else if ($("font", td).attr("color") === "red") {
-                    const depatureTime = $("font", td).text().trim();
-                    if (depatureTime) {
-                      schedule.depatureTime = depatureTime;
-                      break;
-                    }
+            switch (index) {
+              case 0:
+                schedule.startStation = $(td).text().trim();
+                break;
+              case 1:
+              case 2:
+                if ($("font", td).attr("color") === "green") {
+                  const arrivalTime = $("font", td).text().trim();
+                  if (arrivalTime) {
+                    schedule.arrivalTime = arrivalTime;
+                    break;
                   }
-                  break;
-                case 3:
-                  schedule.destination = {
-                    destinationStation: $(td).text().split(" ")[0].trim(),
-                    destinationStationTime: $(td).text().split(" ")[1].trim(),
-                  };
-                  break;
-                case 4:
-                  schedule.endStation = {
-                    endStation: $(td).text().split(" ")[0].trim(),
-                    endStationTime: $(td).text().split(" ")[1].trim(),
-                  };
-                  break;
-                case 5:
-                  schedule.frequency = $(td).text().trim();
-                  break;
-                case 6:
-                  schedule.name = $(td).text().trim();
-                  break;
-                case 7:
-                  schedule.type = $(td).text().trim();
-                  break;
-                default:
-                  break;
-              }
+                } else if ($("font", td).attr("color") === "red") {
+                  const depatureTime = $("font", td).text().trim();
+                  if (depatureTime) {
+                    schedule.depatureTime = depatureTime;
+                    break;
+                  }
+                }
+                break;
+              case 3:
+                schedule.destination = {
+                  destinationStation: $(td).text().split(" ")[0].trim(),
+                  destinationStationTime: $(td).text().split(" ")[1].trim(),
+                };
+                break;
+              case 4:
+                schedule.endStation = {
+                  endStation: $(td).text().split(" ")[0].trim(),
+                  endStationTime: $(td).text().split(" ")[1].trim(),
+                };
+                break;
+              case 5:
+                schedule.frequency = $(td).text().trim();
+                break;
+              case 6:
+                schedule.name = $(td).text().trim();
+                break;
+              case 7:
+                schedule.type = $(td).text().trim();
+                break;
+              case 8:
+                console.log($(td).parent("tr").attr("style"));
+                break;
+              default:
+                break;
             }
           });
 
         scheduleBody.push(schedule);
       }
     });
-    trainDetails = { headers: scheduleHeaders, schedules: scheduleBody };
+
+    const schedule = scheduleAdditionalData.map((val, index) => {
+      const _scheduleData = scheduleBody[index];
+      _scheduleData.availableClasses = val.availableClasses;
+      _scheduleData.trainsEndAt = val.trainsEndAt;
+      _scheduleData.trainNo = val.trainNo;
+
+      return _scheduleData;
+    });
+    trainDetails = { headers: scheduleHeaders, schedules: schedule };
     return trainDetails;
   } catch (error) {
     console.log(error);
