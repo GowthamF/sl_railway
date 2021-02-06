@@ -19,19 +19,19 @@ getScheduleData = async (req) => {
     const scheduleAdditionalData = [];
     const ticketDetails = { totalDistance: {}, ticketPrices: [] };
 
-    // const selectedLocale = req.body.selectedLocale;
-    // const startStationID = req.body.startStationID;
-    // const endStationID = req.body.endStationID;
-    // const startTime = req.body.startTime;
-    // const endTime = req.body.endTime;
-    // const searchDate = req.body.searchDate;
+    const selectedLocale = req.body.selectedLocale;
+    const startStationID = req.body.startStationID;
+    const endStationID = req.body.endStationID;
+    const startTime = req.body.startTime;
+    const endTime = req.body.endTime;
+    const searchDate = req.body.searchDate;
 
-    const selectedLocale = "en";
-    const startStationID = 61;
-    const endStationID = 115;
-    const startTime = -1;
-    const endTime = -1;
-    const searchDate = "04/02/2021";
+    // const selectedLocale = "en";
+    // const startStationID = 61;
+    // const endStationID = 115;
+    // const startTime = -1;
+    // const endTime = -1;
+    // const searchDate = "04/02/2021";
 
     const formData = new FormData();
     formData.append("selectedLocale", selectedLocale);
