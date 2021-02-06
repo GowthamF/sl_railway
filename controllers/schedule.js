@@ -72,7 +72,9 @@ getScheduleData = async (req) => {
           ticketDetails.totalDistance = $("td", tr).text().trim();
           return;
         } else {
-          ticketDetails.ticketPrices.push($("td", tr).text().trim());
+          ticketDetails.ticketPrices.push(
+            $("td", tr).text().trim().replace("Class", "Class ")
+          );
           return;
         }
       });
