@@ -157,15 +157,28 @@ getScheduleData = async (req) => {
                 }
                 break;
               case 3:
+                const destination = $(td).text().split(" ");
+
                 schedule.destination = {
-                  destinationStation: $(td).text().split(" ")[0].trim(),
-                  destinationStationTime: $(td).text().split(" ")[1].trim(),
+                  destinationStation: destination
+                    .slice(0, destination.length - 1)
+                    .toLocaleString()
+                    .trim()
+                    .replace(/,/g, " "),
+                  destinationStationTime: destination[
+                    destination.length - 1
+                  ].trim(),
                 };
                 break;
               case 4:
+                const endStation = $(td).text().split(" ");
                 schedule.endStation = {
-                  endStation: $(td).text().split(" ")[0].trim(),
-                  endStationTime: $(td).text().split(" ")[1].trim(),
+                  endStation: endStation
+                    .slice(0, endStation.length - 1)
+                    .toLocaleString()
+                    .trim()
+                    .replace(/,/g, " "),
+                  endStationTime: endStation[endStation.length - 1].trim(),
                 };
                 break;
               case 5:
