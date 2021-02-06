@@ -1,7 +1,7 @@
 class Stations {
   constructor(stationId, stationName) {
-    this.stationId = stationId;
-    this.stationName = stationName;
+    this.id = stationId;
+    this.value = stationName;
   }
 }
 

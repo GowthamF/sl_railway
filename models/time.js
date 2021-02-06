@@ -1,7 +1,7 @@
 class Time {
   constructor(timeId, timeValue) {
-    this.timeId = timeId;
-    this.timeValue = timeValue;
+    this.id = timeId;
+    this.value = timeValue;
   }
 }
 
