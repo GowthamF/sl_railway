@@ -21,7 +21,9 @@ getStationAndTimeData = async () => {
       .find("option")
       .each((i, op) => {
         if ($(op).val().trim()) {
-          stations.push(new Stations($(op).val().trim(), $(op).text().trim()));
+          stations.push(
+            new Stations(parseInt($(op).val().trim()), $(op).text().trim())
+          );
         }
       });
     $("#startTime", body)
