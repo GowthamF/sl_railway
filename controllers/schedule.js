@@ -113,8 +113,9 @@ getScheduleData = async (req) => {
             .join("")
             .split(":")[1]
             .replace(/,/g, " | ");
-          const trainsEndData = trainEnd.join("").split("at");
-          const trainsEndAt = trainsEndData[1] + " at " + trainsEndData[2];
+          const trainsEndData = trainEnd.join(" ").split("at");
+          const trainsEndAt =
+            trainsEndData[1].trim() + " at " + trainsEndData[2].trim();
 
           const trainNoData = additionalData.slice(
             endTEIndex + 1,
