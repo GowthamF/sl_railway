@@ -1,0 +1,96 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "defaultTitle",
+    "description": "defaultDescription",
+    "version": "0.1"
+  },
+  "servers": [
+    {
+      "url": "https://sl-railway-api.herokuapp.com"
+    }
+  ],
+  "paths": {
+    "/slrailway/getSchedule": {
+      "post": {
+        "description": "Auto generated using Swagger Inspector",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/body"
+              },
+              "examples": {
+                "0": {
+                  "value": "{\"selectedLocale\":\"en\",\"startStationID\":115,\"endStationID\":61,\"startTime\":-1,\"endTime\":-1,\"searchDate\":\"07/02/2021\"}"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Auto generated using Swagger Inspector"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://sl-railway-api.herokuapp.com"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://sl-railway-api.herokuapp.com"
+        }
+      ]
+    },
+    "/slrailway/getStations": {
+      "get": {
+        "description": "Auto generated using Swagger Inspector",
+        "responses": {
+          "200": {
+            "description": "Auto generated using Swagger Inspector"
+          }
+        },
+        "servers": [
+          {
+            "url": "https://sl-railway-api.herokuapp.com"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "https://sl-railway-api.herokuapp.com"
+        }
+      ]
+    }
+  },
+  "components": {
+    "schemas": {
+      "body": {
+        "type": "object",
+        "properties": {
+          "endStationID": {
+            "type": "integer"
+          },
+          "searchDate": {
+            "type": "string"
+          },
+          "startTime": {
+            "type": "integer"
+          },
+          "endTime": {
+            "type": "integer"
+          },
+          "selectedLocale": {
+            "type": "string"
+          },
+          "startStationID": {
+            "type": "integer"
+          }
+        }
+      }
+    }
+  }
+}

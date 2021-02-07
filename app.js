@@ -1,5 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
 const stationRoutes = require("./routes/stations");
 const scheduleRoutes = require("./routes/schedule");
@@ -7,6 +9,8 @@ const scheduleRoutes = require("./routes/schedule");
 const app = express();
 
 app.use(bodyParser.json());
+
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -22,7 +26,7 @@ app.use("/slrailway", stationRoutes);
 app.use("/slrailway", scheduleRoutes);
 
 //Production
-app.listen(process.env.PORT || 3000);
+// app.listen(process.env.PORT || 3000);
 
 //Development
-// app.listen(3000);
+app.listen(3000);
